@@ -1,19 +1,19 @@
-const {user, User} = require('../models');
+const {user} = require('../models');
 const {AuthenticationError} = require('apollo-server-express');
 const {signToken} = require('../utils/auth');
-const { findOne } = require('../models/User');
+
 
 const resolvers = {
-    query:{
+    Query:{
         me: async(parent, args, context) =>{
-            if(context.user){
+            if(context.User){
                 const userData = findOne({_id: context.user._id})
                 return userData;
             }
             throw new AuthenticationError('Not Logged In');
         }
     },
-    mutation:{
+    Mutation:{
         addUser: async(parent, args) =>{
             const user = await user.create(args);
             const token =signToken(user);
@@ -49,7 +49,7 @@ const resolvers = {
             throw new AuthenticationError('Not Logged In');
         },
 
-        removeBook: async (parent, {bookId}, context) =>{
+        removeBook: async (parent, { bookId }, context) =>{
             if(context.user){
                 const updateUser = await user.findOneAndUpdate(
                     {_id: context.user._id},
@@ -62,4 +62,6 @@ const resolvers = {
         }
 
     }
-}
+};
+
+module.exports = resolvers;
