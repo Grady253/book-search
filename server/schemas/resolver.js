@@ -6,8 +6,8 @@ const {signToken} = require('../utils/auth');
 const resolvers = {
     Query:{
         me: async(parent, args, context) =>{
-            if(context.User){
-                const userData = findOne({_id: context.user._id})
+            if(context.user){
+                const userData = user.findOne({_id: context.user._id})
                 return userData;
             }
             throw new AuthenticationError('Not Logged In');
